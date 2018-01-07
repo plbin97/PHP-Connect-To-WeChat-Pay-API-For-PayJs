@@ -9,13 +9,13 @@
  * $config_mchid is the Business number, which you can see it in you payjs.cn account. 
  * $config_mchid是你的微信支付接口的商户号。
  */
-$config_mchid = "ZMEKQZ";   //商户号 Your business Number
+$config_mchid = "XXXXX";   //商户号 Your business Number
 
 /*
  * $config_key is the private key, which you can see it in your payjs.cn account. 
  * $config_key是你的微信支付接口的密钥。
  */
-$config_key = "0hC7YSaoS5zCTDuN";  //密钥 Your private Key
+$config_key = "123asd";  //密钥 Your private Key
 
 //====================================================================================
 
