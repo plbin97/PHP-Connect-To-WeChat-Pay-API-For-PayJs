@@ -8,12 +8,12 @@
 /*
  * $config_mchid是你的微信支付接口的商户号。
  */
-$config_mchid = "ZMEKQZ";   //商户号 Your business Number
+$config_mchid = "XXXX";   //商户号 Your business Number
 
 /*
  * $config_key是你的微信支付接口的密钥。
  */
-$config_key = "0hC7YSaoS5zCTDuN";  //密钥 Your private Key
+$config_key = "xxxxxx";  //密钥 Your private Key
 
 //====================================================================================
 
