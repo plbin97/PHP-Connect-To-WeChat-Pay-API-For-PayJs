@@ -146,7 +146,7 @@ if($_SESSION['payjs_paid'] == FALSE) {
             setTimeout("window.location.href='process_payment.php'",1000)  //为啥是跳转？对于正常浏览器，除非跳转页面返回了一个HTML，否则这个页面会一直显示的。当那个页面返回HTML的时候，就意味着已经处理完了。
         };
         //====================================================
-        各种动画：
+        //各种动画：
         function appear_title(){
             $("#title").animate({
                 opacity : 1
