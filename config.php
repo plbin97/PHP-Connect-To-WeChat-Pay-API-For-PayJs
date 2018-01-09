@@ -25,14 +25,14 @@ $config_key = "xxxxxx";  //密钥 Your private Key
  * 或者直接：
  *                   $quit_payment_url = "https://www.xxx.com"; 
  */
-$quit_payment_url = "https://www.xxx.com";
+$quit_payment_url = "example/quit.php";
 
 
 /*
  * $after_payment_url 是一个当用户支付完毕，然后页面跳转的地址。
  * 这个变量可以携带参数
  */
-$after_payment_url = "https://www.xxx.com";
+$after_payment_url = "example/finished.php";
 
 //====================================================================================
 
