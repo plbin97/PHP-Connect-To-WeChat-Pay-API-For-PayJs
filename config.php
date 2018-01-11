@@ -8,12 +8,12 @@
 /*
  * $config_mchid是你的微信支付接口的商户号。
  */
-$config_mchid = "ZMEKQZ";   //商户号 Your business Number
+$config_mchid = "xxxx";   //商户号 Your business Number
 
 /*
  * $config_key是你的微信支付接口的密钥。
  */
-$config_key = "0hC7YSaoS5zCTDuN";  //密钥 Your private Key
+$config_key = "xxxxxxxx";  //密钥 Your private Key
 
 //====================================================================================
 
@@ -60,7 +60,7 @@ $use_validation = false;
  * 如果不想，那就这样：
  *                                                    $use_notification_of_pay = false;
  */
-$use_asynchronous_payment_check = true;
+$use_asynchronous_payment_check = false;
 
 
 /*
