@@ -69,7 +69,7 @@ $use_asynchronous_payment_check = false;
  * 如果你的页面协议是http的话，请把下面这个变量写成：
  *                            $connection_protocol = "http";
  * 如果你用的是https的话（SSL/TLS加密），那么，请把下面这个变量改成：
- *                            $connection_protocol = "http";
+ *                            $connection_protocol = "https";
  * 懂？
  * */
 $connection_protocol = "http";
