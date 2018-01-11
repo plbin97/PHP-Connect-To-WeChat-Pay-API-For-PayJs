@@ -3,17 +3,27 @@
  * 此页面用于订单查询后，支付成功显示的界面。
  * 如果检测到$_SESSION['payjs_payment_info'] 和 $_SESSION['payjs_paid'] 两个Session变量不存的的时候，或者检测到此订单未支付的时候，页面自动报错。
  * 
- * 为啥要有这个页面呢？
+ * 为啥要先显示这个页面呢？
  * 因为如果通常订单处理需要一段时间，我们总不好意思让用户看一个空白界面吧，于是我们就让用户先在一个好看的界面待着，当处理完成之后再跳转。
  */
 session_start();
 //=====================================================================
 //判断Session变量是否存在，以及账单是否支付。
-if(!isset($_SESSION['payjs_payment_info']) || !isset($_SESSION['payjs_paid'])) {
+if(!isset($_SESSION['payjs_payment_info'])) {
     die("error | 错误");
 }
-if($_SESSION['payjs_paid'] == FALSE) {
-    die("error | 错误");
+require "config.php";
+require "corn/payment.php";
+if(!$use_asynchronous_payment_check) {
+    if(!isset($_SESSION['payjs_paid'])) {
+        die("error | 错误");
+    }elseif(!$_SESSION['payjs_paid']) {
+        die("error | 错误");
+    }
+}else{
+    if(!check_payment_statue_by_local_temp($_SESSION['payjs_payment_info'] -> payjs_order_id)) {
+        die("error | 错误");
+    }
 }
 ?>
 <!DOCTYPE html>

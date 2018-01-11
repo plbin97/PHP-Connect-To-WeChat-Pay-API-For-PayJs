@@ -25,7 +25,7 @@ function post_to_payjs(array $data, $url) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     $rst = json_decode(curl_exec($ch));
     curl_close($ch);
-     if(sign_verify($rst)){
+     if(sign_verify_for_object($rst)){
          return $rst;
      }else{
          echo $GLOBALS['sign_verification_error_msg'];
@@ -46,7 +46,7 @@ function sign(array $attributes) {
 }
 
 
-function sign_verify($attributes){
+function sign_verify_for_object($attributes){
    /*
     * 函数sign_verify()是一个用于验证数字签名的函数
     * 参数$attributes是一个来自API返回的对象，具体请参考API文档。
@@ -54,6 +54,22 @@ function sign_verify($attributes){
     * 当验证失败时，返回false，意味着有人动过这个传来的数据。
     */
     $arr = object_to_array($attributes);
+    $sign_verify = $arr['sign'];
+    unset($arr['sign']);
+    if(sign($arr) == $sign_verify){
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+}
+
+function sign_verify_for_array($arr){
+    /*
+     * 函数sign_verify()是一个用于验证数字签名的函数
+     * 参数$attributes是一个来自API返回的对象，具体请参考API文档。
+     * 当验证成功时，返回true。
+     * 当验证失败时，返回false，意味着有人动过这个传来的数据。
+     */
     $sign_verify = $arr['sign'];
     unset($arr['sign']);
     if(sign($arr) == $sign_verify){

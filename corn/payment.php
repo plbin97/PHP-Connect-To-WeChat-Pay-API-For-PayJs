@@ -22,6 +22,11 @@ function create_payment_return_info($body,$total_fee){
         return null;
     }
     $data = ['body' => $body, 'out_trade_no' => time(), 'total_fee' => $total_fee, 'mchid' => $GLOBALS['config_mchid']];
+    //判断是否使用异步账单推送，如果使用，那么就添加notify_url。
+    if ($GLOBALS['use_asynchronous_payment_check']) {
+        //explode("?",$_SERVER['REQUEST_URI'])
+        $data['notify_url'] = $GLOBALS['connection_protocol'] . "://" . $_SERVER['HTTP_HOST'] . str_replace("index.php","",$_SERVER['PHP_SELF']) . "notifi.php";
+    }
     $data['sign'] = sign($data);
     $return_data = post_to_payjs($data, $GLOBALS['create_payment_url']);
     if ($return_data -> return_code !=1 || $return_data -> return_msg != "SUCCESS") {
@@ -66,6 +71,10 @@ function does_payment_has_been_paid($payjs_order_id) {
         echo $GLOBALS['parameter_error_msg'];
         return null;
     }
+    //判断是否使用异步账单通知
+    if ($GLOBALS['use_asynchronous_payment_check']) {
+        return check_payment_statue_by_local_temp($payjs_order_id);
+    }
     $return_data = return_payment_info($payjs_order_id);
     if ($return_data == null) {
         return FALSE;
@@ -75,5 +84,19 @@ function does_payment_has_been_paid($payjs_order_id) {
         return FALSE;
     }else{
         return TRUE;
+    }
+}
+
+function check_payment_statue_by_local_temp($payjs_order_id) {
+    /*
+     * 函数check_payment_statue_by_local_temp()与上一个函数一样，都是用于确认订单是否被支付。
+     * 但是此函数是用于异步订单消息推送的订单查询，原理就是查看本地的缓存文件来实现。
+     * 函数返回true意味着账单已付，
+     * 如果函数返回false意味着账单未付，或者执行出错。
+     * */
+    if(check_payment_by_paid_index($payjs_order_id) == "1") {
+        return true;
+    }else{
+        return false;
     }
 }

@@ -46,7 +46,11 @@ if ($info == null) {
     session_start();
     after_payment_created($info -> payjs_order_id, $info -> out_trade_no, $info -> total_fee, $info -> code_url);
     $_SESSION['payjs_payment_info'] = $info;
-    $_SESSION['payjs_paid'] = false;
+    if($use_asynchronous_payment_check) {
+        create_payment_paid_index($info ->payjs_order_id);
+    }else{
+        $_SESSION['payjs_paid'] = false;
+    }
 }
 //================================================================
 ?>
@@ -125,8 +129,24 @@ if ($info == null) {
                 </p>
                 <center id="qrcode"></center> <!--二维码位置-->
                 <br>
-                <p id="title" class="light-color">扫描完成后，请点击按钮</p> <!--一个以呼吸模式出现的字体，若影若现的-->
-                <button id="check" class="btn btn-dark btn-block" type="button" onclick="check_payment();">付好啦</button> <!--支付完毕后需要点击的按钮，用于查询订单-->
+                <p id="title" class="light-color">
+                    <?php
+                    if ($use_asynchronous_payment_check) {
+                        echo "请扫描二维码，付款后，页面会自动跳转";
+                    } else {
+                        echo "扫描完成后，请点击按钮";
+                    }
+                    ?>
+                </p> <!--一个以呼吸模式出现的字体，若影若现的-->
+                <button id="check" class="btn btn-dark btn-block" type="button" onclick="check_payment();">
+                    <?php
+                    if ($use_asynchronous_payment_check) {
+                        echo "付了，但还没跳转";
+                    }else{
+                        echo "付好啦";
+                    }
+                    ?>
+                </button> <!--支付完毕后需要点击的按钮，用于查询订单-->
                 <br>
                 <div id="alert" style="opacity : 0;" class="alert alert-danger alert-dismissible" role="alert"> <!--查询订单后发现没有支付的时候，这个DIV框框就会出现-->
                     <button type="button" class="close" onclick="close_alert();"><span aria-hidden="true">&times;</span></button>
@@ -149,31 +169,53 @@ if ($info == null) {
                     opacity : 0
                 },300);
             }
-            
+
+            <?php if ($use_asynchronous_payment_check) { ?>
+                window.onload = function() {
+                    a_check();
+                }
+                function a_check() {
+                    if (ajax_check() == "1") {
+                        payment_success();
+                    }else {
+                        setTimeout('a_check()', 500);
+                    }
+                }
+            <?php } ?>
+
             //=====================================================
             //检查账单是否已支付
-            /*
-             * 为什么要写三个函数来实现呢，因为，JQ坑爹的ajax，使得跟AJAX放在一起的JS命令都无法执行，于是就分成多几个函数来解决问题。
-             */
+
             function check_payment(){
                 $("#check").attr("disabled", true);
                 $("#check").text("正在检查");
-                setTimeout("button_has_disabled()",200);
+                setTimeout("return_payment_status()",200);
             }
-            function button_has_disabled() {
+            function return_payment_status() {
                 if (ajax_check() == "1") {
                     payment_success();
                 }else{
                     payment_fail();
                 }
             }
+
+            /*
+            * 为啥不用JQ的ajax？因为JQ的ajax效率太低，性能太差，干脆直接调用XMLHttpRequest类
+            * */
+
+            payment_status = "0";
             function ajax_check() {
-                payment_paid = $.ajax({
-                    url:"check_payment.php",
-                    async:false
-                });
-                return payment_paid.responseText;
+                var ajax = new XMLHttpRequest();
+                ajax.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200) {
+                        payment_status = this.responseText;
+                    }
+                };
+                ajax.open("GET","check_payment.php",true);
+                ajax.send();
+                return payment_status;
             }
+
             //========================================================
             /*
              * 当订单查询后，确认已支付时：

@@ -13,14 +13,14 @@
 function after_payment_created($payjs_order_id, $out_trade_no, $total_fee, $code_url) {
 
     /*
-     * $payjs_order_id PAYJS 平台订单号 String[32]
-     * $out_trade_no 用户端自主生成的订单号 String[32]
-     * $total_fee 金额。单位：分 integer[16]
-     * $code_url 扫码的二维码地址 String[64]
-     * 
      * 这里放置用户在账单刚刚创建之后，用户扫码之前，执行的代码。
-     * 总共有4个你需要的变量，在上面。
+     * 总共有4个你需要的变量：
+             * $payjs_order_id PAYJS平台订单号 String[32]
+             * $out_trade_no 用户端自主生成的订单号 String[32]
+             * $total_fee 金额。单位：分 integer[16]
+             * $code_url 扫码的二维码地址 String[64]
      * 建议你将这些数据存入你的数据库
+     *
      */
     //======================================================================
     //代码放这里：
@@ -33,16 +33,18 @@ function after_payment_created($payjs_order_id, $out_trade_no, $total_fee, $code
     //======================================================================
 }
 
-function after_payment_has_been_paid($payjs_order_id, $out_trade_no, $total_fee, $code_url) {
-    sleep(3); //停顿三秒，让用户看看我做的精良界面
+function after_payment_has_been_paid($payjs_order_id, $out_trade_no, $total_fee) {
+
     /*
-     * $payjs_order_id PAYJS 平台订单号 String[32]
-     * $out_trade_no 用户端自主生成的订单号 String[32]
-     * $total_fee 金额。单位：分 integer[16]
-     * $code_url 扫码的二维码地址 String[64]
      * 
      * 这里放置用户在付款成功之后，跳转到你页面之前，执行的代码
-     * 总共4个你需要的变量，在上面。
+     *
+     * 注意！如果你开启了异步账单通知，这里的代码有可能（我说的是有可能）执行两次，所以建议做好做好去重逻辑。
+     *
+     * 总共3个你需要的变量：
+                 * $payjs_order_id PAYJS 平台订单号 String[32]
+                 * $out_trade_no 用户端自主生成的订单号 String[32]
+                 * $total_fee 金额。单位：分 integer[16]
      */
     //=======================================================================
     //代码放这里：
@@ -53,19 +55,18 @@ function after_payment_has_been_paid($payjs_order_id, $out_trade_no, $total_fee,
     
     
     //========================================================================
-    //但是小心一点，如果你用了异步账单消息推送，这个代码会执行两次，一次是在用户点击账单确认按钮的时候，一次是异步消息推送的时候。
 }
 
 function after_cancel_payment($payjs_order_id, $out_trade_no, $total_fee, $code_url) {
     /*
-     * $payjs_order_id PAYJS 平台订单号 String[32]
-     * $out_trade_no 用户端自主生成的订单号 String[32]
-     * $total_fee 金额。单位：分 integer[16]
-     * $code_url 扫码的二维码地址 String[64]
      * 
      * 这里放置用户创建订单后，但又取消了订单，的时候执行的代码。
      * 一旦用户创建订单后，又不想付了，于是就会执行这里的代码
-     * 总共4个你需要的变量，在上面。
+     * 总共4个你需要的变量：
+             * $payjs_order_id PAYJS 平台订单号 String[32]
+             * $out_trade_no 用户端自主生成的订单号 String[32]
+             * $total_fee 金额。单位：分 integer[16]
+             * $code_url 扫码的二维码地址 String[64]
      */
     //=========================================================================
     //代码放这里：

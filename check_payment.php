@@ -15,10 +15,13 @@ require "corn/payment.php";
 
 //调用corn文件夹里的函数来判断账单是否已付款
 if (does_payment_has_been_paid($_SESSION['payjs_payment_info'] -> payjs_order_id)) {
-    $_SESSION['payjs_paid'] = true;
+    if(!$use_asynchronous_payment_check) {
+        $_SESSION['payjs_paid'] = true;
+    }
     echo "1";
 }else {
-    $_SESSION['payjs_paid'] = FALSE;
+    if(!$use_asynchronous_payment_check) {
+        $_SESSION['payjs_paid'] = FALSE;
+    }
     echo "0";
 }
-
